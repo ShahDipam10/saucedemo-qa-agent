@@ -6,35 +6,32 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BASE_URL = os.getenv("BASE_URL", "https://www.saucedemo.com")
-CDP_URL = os.getenv("CDP_URL", "")  # e.g. http://localhost:9222
+CDP_URL = os.getenv("CDP_URL", "")
 
 
 def pytest_addoption(parser):
     parser.addoption("--cdp", action="store_true", default=False, help="Use existing Chrome session via CDP")
 
 
-@pytest.fixture(scope="session")
-def browser_context(pytestconfig):
+@pytest.fixture(scope="function")
+def page(pytestconfig):
     use_cdp = pytestconfig.getoption("--cdp") or bool(CDP_URL)
     pw = sync_playwright().start()
 
     if use_cdp and CDP_URL:
         browser = pw.chromium.connect_over_cdp(CDP_URL)
-        context = browser.contexts[0]
-        yield context
+        context = browser.new_context()
+        pg = context.new_page()
+        pg.goto(BASE_URL)
+        yield pg
+        context.close()
         pw.stop()
     else:
-        browser = pw.chromium.launch(headless=False, slow_mo=100)
+        browser = pw.chromium.launch(headless=False, slow_mo=50)
         context = browser.new_context(viewport={"width": 1280, "height": 720})
-        yield context
+        pg = context.new_page()
+        pg.goto(BASE_URL)
+        yield pg
         context.close()
         browser.close()
         pw.stop()
-
-
-@pytest.fixture(scope="function")
-def page(browser_context):
-    page = browser_context.new_page()
-    page.goto(BASE_URL)
-    yield page
-    page.close()
