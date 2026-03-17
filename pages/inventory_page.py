@@ -12,12 +12,10 @@ class InventoryPage:
         return self.title.inner_text()
 
     def add_item_to_cart(self, item_name: str):
-        selector = f"[data-test='add-to-cart-{item_name}']"
-        self.page.locator(selector).click()
+        self.page.locator(f"[data-test='add-to-cart-{item_name}']").click()
 
     def remove_item_from_cart(self, item_name: str):
-        selector = f"[data-test='remove-{item_name}']"
-        self.page.locator(selector).click()
+        self.page.locator(f"[data-test='remove-{item_name}']").click()
 
     def get_cart_count(self) -> int:
         if self.cart_badge.is_visible():
