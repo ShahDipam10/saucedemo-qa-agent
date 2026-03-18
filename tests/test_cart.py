@@ -38,3 +38,17 @@ class TestCart:
         assert cart.is_loaded()
         assert cart.get_item_count() == 1
         assert "Sauce Labs Backpack" in cart.get_item_names()
+
+    def test_add_items_list_and_verify_cart(self, page):
+        inventory = InventoryPage(page)
+        cart = CartPage(page)
+        items = ["sauce-labs-backpack", "sauce-labs-bike-light"]
+
+        inventory.add_items_to_cart(items)
+        assert inventory.get_cart_count() == len(items)
+
+        inventory.go_to_cart()
+        assert cart.get_item_count() == len(items)
+        assert cart.has_item("Sauce Labs Backpack")
+        assert cart.has_item("Sauce Labs Bike Light")
+

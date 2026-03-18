@@ -28,3 +28,18 @@ class CheckoutPage:
 
     def get_error_message(self) -> str:
         return self.error_message.inner_text()
+
+    def get_overview_item_names(self) -> list:
+        return self.page.locator(".cart_item .inventory_item_name").all_inner_texts()
+
+    def get_item_total(self) -> float:
+        raw_text = self.page.locator(".summary_subtotal_label").inner_text()
+        return float(raw_text.split("$")[-1])
+
+    def get_tax_amount(self) -> float:
+        raw_text = self.page.locator(".summary_tax_label").inner_text()
+        return float(raw_text.split("$")[-1])
+
+    def get_total(self) -> float:
+        raw_text = self.page.locator(".summary_total_label").inner_text()
+        return float(raw_text.split("$")[-1])

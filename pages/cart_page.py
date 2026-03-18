@@ -12,6 +12,12 @@ class CartPage:
     def get_item_count(self) -> int:
         return self.cart_items.count()
 
+    def has_item(self, item_name: str) -> bool:
+        return self.page.locator(f".inventory_item_name:has-text(\"{item_name}\")").count() > 0
+
+    def get_item_prices(self) -> list:
+        return self.page.locator(".inventory_item_price").all_inner_texts()
+
     def proceed_to_checkout(self):
         self.checkout_button.click()
 

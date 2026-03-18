@@ -41,3 +41,28 @@ class TestCheckout:
         checkout.fill_info(CHECKOUT_INFO["first_name"], CHECKOUT_INFO["last_name"], "")
         checkout.continue_to_overview()
         assert "Postal Code is required" in checkout.get_error_message()
+
+    def test_checkout_overview_lists_items_and_calculates_total(self, page):
+        inventory = InventoryPage(page)
+        cart = CartPage(page)
+        checkout = CheckoutPage(page)
+
+        inventory.add_item_to_cart("sauce-labs-backpack")
+        inventory.add_item_to_cart("sauce-labs-bike-light")
+        inventory.go_to_cart()
+
+        cart.proceed_to_checkout()
+        checkout.fill_info(CHECKOUT_INFO["first_name"], CHECKOUT_INFO["last_name"], CHECKOUT_INFO["postal_code"])
+        checkout.continue_to_overview()
+
+        names = checkout.get_overview_item_names()
+        assert "Sauce Labs Backpack" in names
+        assert "Sauce Labs Bike Light" in names
+
+        item_total = checkout.get_item_total()
+        assert item_total > 0
+
+        tax = checkout.get_tax_amount()
+        total = checkout.get_total()
+        assert total == pytest.approx(item_total + tax, rel=1e-3)
+

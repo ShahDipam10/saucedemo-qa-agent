@@ -22,5 +22,9 @@ class InventoryPage:
             return int(self.cart_badge.inner_text())
         return 0
 
+    def add_items_to_cart(self, item_names: list):
+        for item_name in item_names:
+            self.add_item_to_cart(item_name)
+
     def go_to_cart(self):
         self.cart_icon.click()
