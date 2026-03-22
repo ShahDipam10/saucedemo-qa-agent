@@ -10,6 +10,8 @@ class LoginPage:
         self.username_input.fill(username)
         self.password_input.fill(password)
         self.login_button.click()
+        # wait for either inventory page or error — whichever comes first
+        self.page.wait_for_load_state("networkidle")
 
     def get_error_message(self) -> str:
         return self.error_message.inner_text()
