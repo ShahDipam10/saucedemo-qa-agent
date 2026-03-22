@@ -10,7 +10,7 @@ class LoginPage:
         self.username_input.fill(username)
         self.password_input.fill(password)
         self.login_button.click()
-        # wait for either inventory page or error — whichever comes first
+        # wait for page to fully settle before handing control to the test
         self.page.wait_for_load_state("networkidle")
 
     def get_error_message(self) -> str:
