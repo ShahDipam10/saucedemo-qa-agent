@@ -1,36 +1,23 @@
 import pytest
 from pages.login_page import LoginPage
 from pages.inventory_page import InventoryPage
-from utils.test_data import LOGIN_VALID, LOGIN_LOCKED, LOGIN_INVALID, LOGIN_EMPTY
+from utils.data_loader import valid_users, invalid_users
 
 
 class TestLogin:
 
-    def test_valid_login(self, page):
-        """Standard user should log in successfully."""
-        login = LoginPage(page)
+    @pytest.mark.parametrize("username, password", valid_users())
+    def test_valid_login(self, page, username, password):
+        """All valid user types should land on the inventory page."""
+        LoginPage(page).login(username, password)
         inventory = InventoryPage(page)
-        login.login(LOGIN_VALID["username"], LOGIN_VALID["password"])
-        assert inventory.is_loaded(), "Inventory page did not load after valid login"
+        assert inventory.is_loaded(), f"Inventory did not load for user: {username}"
         assert inventory.get_title() == "Products"
 
-    def test_invalid_login(self, page):
-        """Wrong credentials should show an error message."""
+    @pytest.mark.parametrize("username, password, expected_error", invalid_users())
+    def test_invalid_login(self, page, username, password, expected_error):
+        """Each invalid credential set should show the correct error message."""
         login = LoginPage(page)
-        login.login(LOGIN_INVALID["username"], LOGIN_INVALID["password"])
-        assert login.is_error_visible(), "Error message not shown for invalid login"
-        assert "Username and password do not match" in login.get_error_message()
-
-    def test_locked_user_login(self, page):
-        """Locked out user should see a specific error."""
-        login = LoginPage(page)
-        login.login(LOGIN_LOCKED["username"], LOGIN_LOCKED["password"])
-        assert login.is_error_visible(), "Error message not shown for locked user"
-        assert "locked out" in login.get_error_message().lower()
-
-    def test_empty_credentials(self, page):
-        """Empty fields should trigger a validation error."""
-        login = LoginPage(page)
-        login.login(LOGIN_EMPTY["username"], LOGIN_EMPTY["password"])
-        assert login.is_error_visible(), "Error message not shown for empty credentials"
-        assert "Username is required" in login.get_error_message()
+        login.login(username, password)
+        assert login.is_error_visible(), f"No error shown for user: {username!r}"
+        assert expected_error in login.get_error_message()
