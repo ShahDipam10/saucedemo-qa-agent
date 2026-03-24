@@ -1,0 +1,35 @@
+{
+  "login": {
+    "valid_users": [
+      { "id": "standard_user",           "username": "standard_user",           "password": "secret_sauce" },
+      { "id": "problem_user",            "username": "problem_user",            "password": "secret_sauce" },
+      { "id": "performance_glitch_user", "username": "performance_glitch_user", "password": "secret_sauce" }
+    ],
+    "invalid_users": [
+      { "id": "wrong_password",  "username": "standard_user",   "password": "wrong_pass",   "error": "Username and password do not match" },
+      { "id": "locked_user",     "username": "locked_out_user", "password": "secret_sauce", "error": "Sorry, this user has been locked out" },
+      { "id": "empty_username",  "username": "",                "password": "secret_sauce", "error": "Username is required" },
+      { "id": "empty_password",  "username": "standard_user",   "password": "",             "error": "Password is required" },
+      { "id": "empty_both",      "username": "",                "password": "",             "error": "Username is required" }
+    ]
+  },
+  "checkout": {
+    "valid_info": [
+      { "id": "full_info",   "first_name": "Test",        "last_name": "User",      "postal_code": "380001" },
+      { "id": "short",       "first_name": "A",           "last_name": "B",         "postal_code": "00001"  },
+      { "id": "long_names",  "first_name": "Christopher", "last_name": "Alexander", "postal_code": "999999" }
+    ],
+    "invalid_info": [
+      { "id": "missing_first",  "first_name": "",     "last_name": "User", "postal_code": "380001", "error": "First Name is required"  },
+      { "id": "missing_last",   "first_name": "Test", "last_name": "",     "postal_code": "380001", "error": "Last Name is required"   },
+      { "id": "missing_postal", "first_name": "Test", "last_name": "User", "postal_code": "",       "error": "Postal Code is required" }
+    ]
+  },
+  "products": [
+    { "id": "sauce-labs-backpack",    "name": "Sauce Labs Backpack",    "price": 29.99 },
+    { "id": "sauce-labs-bike-light",  "name": "Sauce Labs Bike Light",  "price": 9.99  },
+    { "id": "sauce-labs-bolt-t-shirt","name": "Sauce Labs Bolt T-Shirt","price": 15.99 },
+    { "id": "sauce-labs-fleece-jacket","name": "Sauce Labs Fleece Jacket","price": 49.99 },
+    { "id": "sauce-labs-onesie",      "name": "Sauce Labs Onesie",      "price": 7.99  }
+  ]
+}
